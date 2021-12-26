@@ -25,6 +25,9 @@ pub mod pallet {
 	pub trait Config: frame_system::Config {
 		/// Because this pallet emits events, it depends on the runtime's definition of an event.
 		type Event: From<Event<Self>> + IsType<<Self as frame_system::Config>::Event>;
+
+		#[pallet::constant]
+		type ClaimMaxLength: Get<u32>;
 	}
 
 	#[pallet::pallet]
@@ -53,6 +56,7 @@ pub mod pallet {
 		ProofAlreadyExist,
 		ClaimNotExist,
 		NotClaimOwner,
+		ClaimMaxLengthExceeded,
 	}
 
 	#[pallet::hooks]
@@ -73,6 +77,9 @@ pub mod pallet {
 			let sender = ensure_signed(origin)?;
 
 			ensure!(!Proofs::<T>::contains_key(&claim), Error::<T>::ProofAlreadyExist);
+
+			let max_length = T::ClaimMaxLength::get();
+			ensure!(claim.len() <= max_length.try_into().unwrap(), Error::<T>::ClaimMaxLengthExceeded);
 
 			Proofs::<T>::insert(
 				&claim,
