@@ -9,6 +9,8 @@ include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 use pallet_grandpa::{
 	fg_primitives, AuthorityId as GrandpaId, AuthorityList as GrandpaAuthorityList,
 };
+use frame_support::pallet_prelude::Get;
+use frame_support::pallet_prelude::ConstU32;
 use sp_api::impl_runtime_apis;
 use sp_consensus_aura::sr25519::AuthorityId as AuraId;
 use sp_core::{crypto::KeyTypeId, OpaqueMetadata};
@@ -282,7 +284,7 @@ impl pallet_template::Config for Runtime {
 
 impl pallet_poe::Config for Runtime {
 	type Event = Event;
-	type ClaimMaxLength = usize;
+	type ClaimMaxLength = ConstU32<32>;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
