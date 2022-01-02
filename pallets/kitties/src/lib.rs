@@ -76,13 +76,15 @@ pub mod pallet {
 		pub fn create(origin: OriginFor<T>) -> DispatchResult {
 			let who = ensure_signed(origin)?;
 
-			let kitty_id = Self::get_new_kitty_id()?;
+			let kitty_id = Self::new_kitty_id()?;
 
 			let dna = Self::random_value(&who);
 
 			Kitties::<T>::insert(kitty_id,Some(Kitty(dna)));
 
 			Owner::<T>::insert(kitty_id, Some(who.clone()));
+
+			KittiesCount::<T>::put(kitty_id + 1);
 
 			Self::deposit_event(Event::KittyCreate(who, kitty_id));
 			Ok(())
@@ -110,7 +112,7 @@ pub mod pallet {
 			let kitty1 = Self::kitties(kitty_id_1).ok_or(Error::<T>::InvalidKittyIndex)?;
 			let kitty2 = Self::kitties(kitty_id_2).ok_or(Error::<T>::InvalidKittyIndex)?;
 
-			let kitty_id = Self::get_new_kitty_id()?;
+			let kitty_id = Self::new_kitty_id()?;
 
 			let dna_1 = kitty1.0;
 			let dna_2 = kitty2.0;
@@ -143,7 +145,7 @@ pub mod pallet {
 			payload.using_encoded(blake2_128)
 		}
 
-		fn get_new_kitty_id() -> Result<KittyIndex, Error<T>> {
+		fn new_kitty_id() -> Result<KittyIndex, Error<T>> {
 			match Self::kitties_count() {
 				Some(id) => {
 					ensure!(id != KittyIndex::max_value(), Error::<T>::KittiesCountOverflow);
