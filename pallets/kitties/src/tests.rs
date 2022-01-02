@@ -4,10 +4,10 @@ use super::*;
 
 #[test]
 fn should_create_kitty_successfully() {
-	// new_test_ext().execute_with(|| {
-	// 	assert_ok!(KittiesModule::create(Origin::signed(1)));
-	// 	assert_eq!(KittiesCount::<Test>::get(), 1);
-	// });
+	new_test_ext().execute_with(|| {
+		assert_ok!(KittiesModule::create(Origin::signed(1)));
+		assert_eq!(KittiesCount::<Test>::get(), 1);
+	});
 }
 
 #[test]

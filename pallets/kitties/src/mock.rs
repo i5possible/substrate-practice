@@ -18,7 +18,8 @@ frame_support::construct_runtime!(
 		UncheckedExtrinsic = UncheckedExtrinsic,
 	{
 		System: frame_system::{Pallet, Call, Config, Storage, Event<T>},
-		RandomnessCollectiveFlip: pallet_randomness_collective_flip::{Pallet, Call, Storage, Event<T>},
+		// TODO [question] use of undeclared crate or module `pallet_randomness_collective_flip`
+		RandomnessCollectiveFlip: pallet_randomness_collective_flip::{Pallet, Storage},
 		KittiesModule: pallet_kitties::{Pallet, Call, Storage, Event<T>},
 	}
 );
@@ -59,7 +60,7 @@ impl pallet_kitties::Config for Test {
 	type Randomness = RandomnessCollectiveFlip;
 }
 
-impl pallet_randomness_collective_flip::Config for Runtime {}
+impl pallet_randomness_collective_flip::Config for Test {}
 
 
 // Build genesis storage according to the mock runtime.
